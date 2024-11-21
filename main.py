@@ -7,15 +7,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import mysql.connector
 
+conn = mysql.connector.connect(
+    host="127.0.0.1",  # local
+    user='root',
 
-def connectDB():
-    conn = mysql.connector.connect(
-        host="127.0.0.1",  # local
-        user='root',
-        password='',
-        database="supermarkets"
-    )
-    return conn
+    password='',
+    database="supermarkets")
 
 def disCookies(driver):
     try:
@@ -47,8 +44,13 @@ for item in list_items:
 
 for link in link_list:
     driver.get(link)
+    price_element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//*[@id="fti-product-price--0"]/div[1]/div[1]'))
+    )
+    price_text = price_element.text.replace("\n","").strip()
+    print(f"Price: {price_text}")
 
-    time.sleep(50)
+    time.sleep(1)
 
 
 
