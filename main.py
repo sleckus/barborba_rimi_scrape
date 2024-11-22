@@ -14,9 +14,9 @@ def disCookies(driver):
             EC.element_to_be_clickable((By.ID, "CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll"))
         )
         cookie_accept_button.click()
-        print("Cookie prompt dismissed.")
+        print("Cookie dismissed.")
     except Exception as e:
-        print(f"Cookie prompt not found: {e}")
+        print(f"{e}")
 
 driver = webdriver.Chrome()
 driver.maximize_window()
@@ -71,7 +71,7 @@ for link in link_list:
         fat_per = re.sub(r"[^0-9.,]", "", fat_element.text.replace("\n", "").strip()).replace(",", ".")
         print(f"Fat percentage: {fat_per} g")
     except Exception as e:
-        print(f"Failed to get fat percentage from the page: {e}")
+        print(f"Failed to get fat percentage: {e}")
 
     volume = float(price_text[:4]) / float(price_per)
     package_size = round(round(volume, 3) * 1000, -2)
