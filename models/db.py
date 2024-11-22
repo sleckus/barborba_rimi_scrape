@@ -12,17 +12,19 @@ def get_db_connection():
 def clear_table(conn, table_name):
     cursor = conn.cursor()
     cursor.execute(f"DELETE FROM {table_name}")
-    cursor.execute(f"ALTER TABLE {table_name} AUTO_INCREMENT = 1")  # Reset auto-increment to 1
+    cursor.execute(f"ALTER TABLE {table_name} AUTO_INCREMENT = 1")  #
     conn.commit()
     cursor.close()
-    print(f"Table {table_name} cleared and auto-increment reset.")
+    print(f"Table {table_name} cleared and reset.")
 
-def insert_milk_data(conn, name, fat_content, package_size, price, price_per_kg, scraped_at):
+def insert_milk_data(conn, table_name, name, fat_content, package_size, price, price_per_kg, scraped_at, is_sale):
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO maxima_milk (name, fat_content, package_size, price, price_per_kg, scraped_at) "
-        "VALUES (%s, %s, %s, %s, %s, %s)",
-        (name, fat_content, package_size, price, price_per_kg, scraped_at)
+        f"INSERT INTO {table_name} (name, fat_content, package_size, price, price_per_kg, scraped_at, is_sale) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+        (name, fat_content, package_size, price, price_per_kg, scraped_at, is_sale)
     )
+
     conn.commit()
     cursor.close()
+    print(f"Data inserted into {table_name}.")

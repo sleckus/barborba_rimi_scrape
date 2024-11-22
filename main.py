@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from models.db import get_db_connection, clear_table, insert_milk_data
-
+table_name = 'maxima_milk'
 def disCookies(driver):
     try:
         wait = WebDriverWait(driver, 10)
@@ -38,6 +38,7 @@ conn = get_db_connection()
 clear_table(conn, "maxima_milk")
 
 for link in link_list:
+    print("*" * 30)
     driver.get(link)
     time.sleep(0.5)
     price_element = WebDriverWait(driver, 2).until(
@@ -50,6 +51,11 @@ for link in link_list:
         EC.presence_of_element_located((By.XPATH, '//*[@id="fti-product-price--0"]/div[1]/div[1]')))
     price_text = re.sub(r"[^0-9.,]", "", price_element.text.replace("\n", "").strip()).replace(",", ".")
     print(f"Price: {price_text[:4]} Eur")
+
+    is_sale = False
+    if len(price_text)>4:
+        is_sale = True
+        print(f'Su nuolaida')
 
     price_element = WebDriverWait(driver, 2).until(
         EC.presence_of_element_located((By.XPATH, '//*[@id="fti-product-price--0"]/div[1]/div[2]')))
@@ -73,7 +79,7 @@ for link in link_list:
 
     scraped_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    insert_milk_data(conn, title, fat_per, package_size, price_text, price_per, scraped_at)
+    insert_milk_data(conn,table_name, title, fat_per, package_size, price_text[:4], price_per, scraped_at, is_sale)
     package_size = 0
     fat_per = 0
     price_per = 0
@@ -81,5 +87,3 @@ for link in link_list:
     print("=" * 30)
 
 
-driver.quit()
-conn.close()
