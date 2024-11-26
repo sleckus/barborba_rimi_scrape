@@ -13,21 +13,21 @@ from selenium import webdriver
 from models.barbora_extractor import extract_links, process_links
 from models.lastmile_extractor import extract_links_mile, process_links_mile, extract_links_mile_bad
 
-# table_name = 'maxima_milk'
-# starting_website = 'https://www.barbora.lt/pieno-gaminiai-ir-kiausiniai/pienas/pasterizuotas-pienas'
-#
-# driver = webdriver.Chrome()
-# driver.maximize_window()
-# driver.implicitly_wait(5)
-# driver.get(starting_website)
-#
-# disCookies(driver,By.ID,"CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll")
-#
-# link_list = extract_links(driver,'/html/body/div[3]/div/div[3]/div/div[3]/div[2]/div/ul')
-# process_links(driver, link_list, table_name)
+table_name = 'maxima_milk'
+starting_website = 'https://www.barbora.lt/pieno-gaminiai-ir-kiausiniai/pienas/pasterizuotas-pienas'
 
-# conn = get_db_connection()
-# clear_table(conn, "maxima_milk")
+driver = webdriver.Chrome()
+driver.maximize_window()
+driver.implicitly_wait(5)
+driver.get(starting_website)
+
+conn = get_db_connection()
+clear_table(conn, "maxima_milk")
+
+disCookies(driver,By.ID,"CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll")
+
+link_list = extract_links(driver,'/html/body/div[3]/div/div[3]/div/div[3]/div[2]/div/ul')
+process_links(driver, link_list, table_name)
 
 table_name = 'iki_milk'
 starting_website = 'https://lastmile.lt/chain/category/IKI/Pienas-B7UTvIzcguAYSjSplM0z'
@@ -42,7 +42,9 @@ disCookies(driver,By.XPATH,"/html/body/div/span[7]/div/span/div/div/div[2]/span[
 time.sleep(1)
 all_milk = extract_links_mile(driver,'/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[2]')
 bad_milk = extract_links_mile_bad(driver,'/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[2]')
-# process_links_mile(driver, link_list, table_name)
+link_list = [link for link in all_milk if link not in bad_milk]
+print(link_list)
+process_links_mile(driver, link_list, table_name)
 
 
 

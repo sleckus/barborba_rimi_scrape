@@ -19,23 +19,58 @@ def extract_links_mile(driver, xpath):
     return link_list
 
 def extract_links_mile_bad(driver, xpath):
-    link_list = []
-    category_list = []
-    container_cat = driver.find_element(By.XPATH, "/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[1]/span/div")
-    cat_items = container_cat.find_elements(By.CSS_SELECTOR, 'button[role="button"]')
-    for item in cat_items:
-
-        item.click()
-        time.sleep(1)
-
+    driver.find_element(By.XPATH,'/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[1]/span/div/span[2]/span/button/span/span').click()
+    bad_link_list = []
     time.sleep(1)
-    container = driver.find_element(By.XPATH, xpath)
-    list_items = container.find_elements(By.CSS_SELECTOR, '[data-testid="main-productCard"]')
+    bad_container = driver.find_element(By.XPATH, xpath)
+    list_items = bad_container.find_elements(By.CSS_SELECTOR, '[data-testid="main-productCard"]')
     for item in list_items:
         link = item.find_element(By.TAG_NAME, "a").get_attribute('href')
         print(link)
-        link_list.append(link)
-    return link_list
+        bad_link_list.append(link)
+
+    driver.find_element(By.XPATH,
+                        '/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[1]/span/div/span[3]/span/button/span/span').click()
+    time.sleep(1)
+    bad_container = driver.find_element(By.XPATH, xpath)
+    list_items = bad_container.find_elements(By.CSS_SELECTOR, '[data-testid="main-productCard"]')
+    for item in list_items:
+        link = item.find_element(By.TAG_NAME, "a").get_attribute('href')
+        print(link)
+        bad_link_list.append(link)
+
+    driver.find_element(By.XPATH,
+                        '/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[1]/span/div/span[4]/span/button/span/span').click()
+    time.sleep(1)
+    bad_container = driver.find_element(By.XPATH, xpath)
+    list_items = bad_container.find_elements(By.CSS_SELECTOR, '[data-testid="main-productCard"]')
+    for item in list_items:
+        link = item.find_element(By.TAG_NAME, "a").get_attribute('href')
+        print(link)
+        bad_link_list.append(link)
+
+    driver.find_element(By.XPATH,
+                        '/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[1]/span/div/span[5]/span/button/span/span').click()
+    time.sleep(1)
+    bad_container = driver.find_element(By.XPATH, xpath)
+    list_items = bad_container.find_elements(By.CSS_SELECTOR, '[data-testid="main-productCard"]')
+    for item in list_items:
+        link = item.find_element(By.TAG_NAME, "a").get_attribute('href')
+        print(link)
+        bad_link_list.append(link)
+
+    driver.find_element(By.XPATH,
+                        '/html/body/div/span[1]/div/div/span/div/div[2]/span[1]/div/div[1]/span/div/span[6]/span/button/span/span').click()
+    time.sleep(1)
+    bad_container = driver.find_element(By.XPATH, xpath)
+    list_items = bad_container.find_elements(By.CSS_SELECTOR, '[data-testid="main-productCard"]')
+    for item in list_items:
+        link = item.find_element(By.TAG_NAME, "a").get_attribute('href')
+        print(link)
+        bad_link_list.append(link)
+
+    return bad_link_list
+
 
 
 def process_links_mile(driver, link_list, table_name):
@@ -45,16 +80,16 @@ def process_links_mile(driver, link_list, table_name):
     for link in link_list:
         print("*" * 30)
         driver.get(link)
-        time.sleep(0.5)
+        time.sleep(1)
 
         price_element = WebDriverWait(driver, 2).until(
             EC.presence_of_element_located(
-                (By.XPATH, '/html/body/div[2]/div/div[3]/div/div[3]/div/div[2]/div[1]/div/div[2]/h1')))
+                (By.XPATH, '/html/body/div/span[1]/div/div/span/div/div[2]/div[2]/div[1]/div[2]/div/div[1]/span[2]/span')))
         title = price_element.text.strip()
         print(title)
 
         price_element = WebDriverWait(driver, 2).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="fti-product-price--0"]/div[1]/div[1]')))
+            EC.presence_of_element_located((By.XPATH, '/html/body/div/span[1]/div/div/span/div/div[2]/div[2]/div[1]/div[2]/div/div[3]/div/div/span/span')))
         price_text = re.sub(r"[^0-9.,]", "", price_element.text.replace("\n", "").strip()).replace(",", ".")
         print(f"Price: {price_text[:4]} Eur")
 
@@ -64,16 +99,16 @@ def process_links_mile(driver, link_list, table_name):
             print(f'Su nuolaida')
 
         price_element = WebDriverWait(driver, 2).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="fti-product-price--0"]/div[1]/div[2]')))
+            EC.presence_of_element_located((By.XPATH, '/html/body/div/span[1]/div/div/span/div/div[2]/div[2]/div[1]/div[2]/div/div[2]/div/span/span/span')))
         price_per = re.sub(r"[^0-9.,]", "", price_element.text.replace("\n", "").strip()).replace(",", ".")
-        if len(price_text) > 4:
-            price_per = price_text[4:]
+        # if len(price_text) > 4:
+        #     price_per = price_text[4:]
         print(f"Price per liter: {price_per} Eur/L")
 
         try:
             fat_element = WebDriverWait(driver, 2).until(
                 EC.presence_of_element_located(
-                    (By.XPATH, '/html/body/div[2]/div/div[3]/div/div[3]/div/div[3]/div/table/tbody/tr[2]/td[2]')))
+                    (By.XPATH, '/html/body/div/span[1]/div/div/span/div/div[2]/div[2]/div[3]/div[2]/span[7]/div/div/span[2]/span/div/div[2]/span[2]/span')))
             fat_per = re.sub(r"[^0-9.,]", "", fat_element.text.replace("\n", "").strip()).replace(",", ".")
             print(f"Fat percentage: {fat_per} g")
         except Exception as e:
