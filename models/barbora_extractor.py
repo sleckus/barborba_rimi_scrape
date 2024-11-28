@@ -29,8 +29,15 @@ def process_links(driver, link_list, table_name):
 
         price_element = WebDriverWait(driver, 2).until(
             EC.presence_of_element_located(
-                (By.XPATH, '/html/body/div[2]/div/div[3]/div/div[3]/div/div[2]/div[1]/div/div[2]/h1')))
-        title = price_element.text.strip()
+                (By.XPATH, '/html/body/div[2]/div/div[3]/div/div[3]/div/div[2]/div[1]/div/div[2]/h1')
+            )
+        )
+        raw_title = price_element.text.strip()
+        title = re.findall(r'\b[A-Z]+\b', raw_title)
+        if not title:
+            title = raw_title
+        else:
+            title = ' '.join(title)
         print(title)
 
         price_element = WebDriverWait(driver, 2).until(
