@@ -12,6 +12,10 @@ from models.cookies import disCookies
 from selenium import webdriver
 from models.barbora_extractor import extract_links, process_links
 from models.lastmile_extractor import extract_links_mile, process_links_mile, extract_links_mile_bad
+from models.milk_comparison import MilkComparison
+
+comparison = MilkComparison('maxima_milk', 'iki_milk', 'milk_compare')
+comparison.clear_comparison_table()
 
 table_name = 'maxima_milk'
 starting_website = 'https://www.barbora.lt/pieno-gaminiai-ir-kiausiniai/pienas/pasterizuotas-pienas'
@@ -47,4 +51,15 @@ print(link_list)
 process_links_mile(driver, link_list, table_name)
 
 
+milk_comparator = MilkComparison(
+    maxima_table='maxima_milk',
+    iki_table='iki_milk',
+    compare_table='milk_compare'
+)
+
+
+
+milk_comparator.compare_and_store()
+
+milk_comparator.close()
 
